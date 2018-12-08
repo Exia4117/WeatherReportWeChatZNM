@@ -1,151 +1,42 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title></title>
-  </head>
-<style>
-  p,ul{margin: 0;padding: 0;}
-  .div{
-    width: 50%;
-    height: 640px;
-    margin:0 auto;
-    border: 1px solid #f1f1f1;
-  }
-  .div h1{
-    width: 100%;
-    height: 50px;
-    background: #f1f1f1;
-    line-height: 50px;
-    font-size: 23px;
-    text-indent: 1.5em;
-  }
-  .div h1 select{
-    float: right;
-    margin-top: 17px;
-  }
-  .div h1>span{
-    font-size: 13px;
-    color: #3a3939;
-  }
-  .div .body p{
-    width: 50%;
-      float: left;
-      margin: 10px 0 10px 0;
-      text-indent: 2em;
-  }
-  .div p:last-child{
-    width: 100%;
-        float: left;
-  }
-  .body{
-    overflow:hidden;
-  }
-  .forword h2{
-    width: 100%;
-    height: 50px;
-    background: #f1f1f1;
-    line-height: 50px;
-    font-size: 23px;
-    text-indent: 1.5em;
-  }
-  .forword p{
-    width: 100%;
-    height: 50px;
-    display: flex;
-  }
-  .forword p span{
-    flex: 1;
-    text-align: center;
-    line-height: 50px;
-    border:1px solid #dddddd;
-  }
-  .forword h2{
-    width: 100%;
-    height: 50px;
-  }
-  .forword li{
-    width: 100%;
-    height: 50px;
-    display: flex;
-  }
-  .forword li span{
-    flex: 1;
-    text-align: center;
-    line-height: 50px;
-    border:1px solid #dddddd;
-  }
-</style>
-  <body>
-      <div class="div">
-        <h1>最新天气实况<span>日期:<span></span></span><select id="select_city"><option>南京</option><option>蚌埠</option><option>南通</option></select></h1>
-        <div class="body">
-          <p>城市：<span></span></p>
-          <p>天气：<span></span></p>
-          <p>当前气温：<span></span></p>
-          <p>风向：<span></span></p>
-          <p>最高气温：<span></span></p>
-          <p>最低气温：<span></span></p>
-          <p>温馨提醒：<span></span></p>
-        </div>
-        <div class="forword">
-          <h2>未来五天天气预报</h2>
-          <p><span>日期</span><span>天气</span><span>最高气温</span><span>风力</span><span>最低气温</span><span>风向</span></p>
-          <ul>
-            <!--<li><span>16日</span><span>20℃</span><span>3-4级</span><span>20℃</span><span>东南</span></li>-->
-          </ul>
-        </div>
-      </div>
-    <script src="../jquery-1.11.2.min.js"></script>
-    <script>
-                $("#select_city").change(function(){
-                  switch ($(this).val()){
-                    case "南京":
-                       citykey_val="101190101";
-                       break;
-                      case "蚌埠":
-                       citykey_val="101220201";
-                       break; 
-                       case "南通":
-                         citykey_val="101190501";
-                       break; 
-                  };
-                  $.ajax({
-            url: 'http://wthrcdn.etouch.cn/weather_mini',
-            type: 'get',
-            data: {
-              citykey:citykey_val
-            },
-        dataType: 'json',
-        success: function (resp) {
-          console.log(resp);
-          var date_data=resp.data.forecast[0].date;
-          var data_len=date_data.substr(0,3);
-          var data_len_day=date_data.substr(3,3);
-          console.log(data_len_day);
-          var date1=new Date();
-          var dateMon=date1.getMonth()+1;
-          var dateDay=date1.getDay();
-          $(".div h1 span span").html(dateMon+'月'+data_len+" "+data_len_day);
-          $('.body p:first-child span').html(resp.data.city);
-          $('.body p:nth-child(2) span').html(resp.data.forecast[0].type);
-          $('.body p:nth-child(3) span').html(resp.data.wendu+"℃");
-          $('.body p:nth-child(4) span').html(resp.data.forecast[0].fengxiang);
-            $('.body p:nth-child(5) span').html(resp.data.forecast[0].high);
-          $('.body p:nth-child(6) span').html(resp.data.forecast[0].low);
-          $('.body p:nth-child(7) span').html(resp.data.ganmao);
-          $('.forword ul').empty();
-          for(var i=0;i<resp.data.forecast.length;i++){
-          var str = resp.data.forecast[i].fengli;
-          var str_fengli=str.substring(9, str.length - 3)
-            var forword_day="<li><span>"+dateMon+'月'+resp.data.forecast[i].date+"</span><span>"+resp.data.forecast[i].type+"</span><span>"+resp.data.forecast[i].high+"</span><span>"+str_fengli+"</span><span>"+resp.data.forecast[i].low+"</span><span>"+resp.data.forecast[i].fengxiang+"</span></li>";
-            $('.forword ul').append(forword_day);
-          }
-        }
-          })
-           })
-                $('#select_city').change();
-      </script>
-  </body>
-</html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><TITLE>天气预报</TITLE>
+<META charset=utf-8>
+<META name=viewport content="width=device-width, user-scalable=no, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+</HEAD>
 
+<BODY>
+
+<div data-role="page" id="page1">
+    <!-- <div data-theme="a" data-role="header" data-position="fixed">
+        <a data-role="button" data-inline="false" href="#panel2" data-icon="bars" class="ui-btn-right">...</a>
+        <h3>通讯录</h3>
+    </div>
+    -->
+    <div data-role="content">
+        <div data-role="collapsible" data-theme="b" data-content-theme="d" data-collapsed-icon="arrow-d" data-expanded-icon="arrow-u">
+            <h4>北京天气</h4>
+            <ul data-role="listview" data-inset="false">
+                <li>当前气温：1℃</li>
+                <li>天气：阴</li>
+                <li>风向：东北风</li>
+                <li>最高气温：3℃</li>
+                <li>最低气温：0℃</li>
+                <li>天气较凉，较易发生感冒，请适当增加衣服。体质较弱的朋友尤其应该注意防护</li>
+            </ul>
+        </div>
+    </div>
+    <!-- 
+    <div data-theme="a" data-role="footer" data-position="fixed">
+        <h3>技术支持 方倍工作室</h3>
+    </div>
+    -->
+</div>
+
+
+
+</BODY>
+</HTML>
