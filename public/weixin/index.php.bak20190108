@@ -75,12 +75,11 @@ class wechatCallbackapiTest
             $str_key = mb_substr($keyword,0,-2,"UTF-8");
             if($str == '天气' && !empty($str_key)){
                 $data = $this->weather($str_key);
-                if(empty($data->HeWeather6[0])){
-  			//$contentStr = $data;                  
-			$contentStr = "抱歉，没有查到\"".$str_key."\"的天气信息！";
+                if(empty($data->weatherinfo)){
+                    $contentStr = "抱歉，没有查到\"".$str_key."\"的天气信息！";
                 } else {
-		$contentStr = "【".$data->HeWeather6[0]->basic->location."天气预报】\n"."\n\n实时天气\n".$data->HeWeather6[0]->now->cond_txt." ".$data->HeWeather6[0]->now->tmp."℃  ".$data->HeWeather6[0]->now->wind_dir." "."\n\n温馨提示："."\n\n明天\n".$data->HeWeather6[0]->daily_forecast[0]->cond_txt_d." ".$data->HeWeather6[0]->daily_forecast[0]->tmp_max."~ ".$data->HeWeather6[0]->daily_forecast[0]->tmp_min."℃".$data->HeWeather6[0]->daily_forecast[0]->wind_dir." "."\n\n后天\n".$data->HeWeather6[0]->daily_forecast[1]->cond_txt_d." ".$data->HeWeather6[1]->daily_forecast[0]->tmp_max."~ ".$data->HeWeather6[0]->daily_forecast[1]->tmp_min."℃".$data->HeWeather6[0]->daily_forecast[1]->wind_dir." ";
- }
+                    $contentStr = "【".$data->weatherinfo->city."天气预报】\n".$data->weatherinfo->date_y." ".$data->weatherinfo->fchh."时发布"."\n\n实时天气\n".$data->weatherinfo->weather1." ".$data->weatherinfo->temp1." ".$data->weatherinfo->wind1."\n\n温馨提示：".$data->weatherinfo->index_d."\n\n明天\n".$data->weatherinfo->weather2." ".$data->weatherinfo->temp2." ".$data->weatherinfo->wind2."\n\n后天\n".$data->weatherinfo->weather3." ".$data->weatherinfo->temp3." ".$data->weatherinfo->wind3;
+                }
             } else {
                 $contentStr = "感谢您关注【卓锦苏州】"."\n"."微信号：zhuojinsz"."\n"."卓越锦绣，名城苏州，我们为您提供苏州本地生活指南，苏州相关信息查询，做最好的苏州微信平台。"."\n"."目前平台功能如下："."\n"."【1】 查天气，如输入：苏州天气"."\n"."【2】 查公交，如输入：苏州公交178"."\n"."【3】 翻译，如输入：翻译I love you"."\n"."【4】 苏州信息查询，如输入：苏州观前街"."\n"."更多内容，敬请期待...";
             }
@@ -125,9 +124,8 @@ class wechatCallbackapiTest
         include("weather_cityId.php");
         $c_name=$weather_cityId[$n];
         if(!empty($c_name)){
-           // $json=file_get_contents("http://m.weather.com.cn/data/".$c_name.".html");
-        $json=file_get_contents("https://free-api.heweather.com/s6/weather?location=CN".$c_name."&key=2405fac4dd7446f7a4cddc339ea1d17f");    
-	return json_decode($json);
+            $json=file_get_contents("http://m.weather.com.cn/data/".$c_name.".html");
+            return json_decode($json);
         } else {
             return null;
         }

@@ -4,13 +4,32 @@ $jssdk = new JSSDK("wx9057905bce2a4dd1", "1dd056eb578c1f786999f4c529688aa0");
 $signPackage = $jssdk->GetSignPackage();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title></title>
+ <title>天气预报</title>
+ <meta charset="UTF-8">
+<meta name=viewport content="width=device-width, user-scalable=no, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>>
 </head>
 <body>
-  
+	<div data-role="page" id="page1">
+        <div data-role="content">
+            <div data-role="collapsible" data-theme="b" data-content-theme="d" data-collapsed-icon="arrow-d" data-expanded-icon="arrow-u">
+                <h4><span id="city"></span>天气</h4>
+                <ul data-role="listview" data-inset="false">
+		    <li><span id="update_time"></span>发布</li>
+                    <li>当前气温：<span id="wendu"></span>℃</li>
+                    <li>天气：<span id="type"></span></li>
+                    <li>湿度：<span id="shidu"></span></li>
+                    <li>风向：<span id="fx"></span></li>
+                    <li>最高气温：<span id="high1"></span></li>
+                    <li>最低气温：<span id="low1"></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script>
@@ -53,6 +72,29 @@ $signPackage = $jssdk->GetSignPackage();
 	var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
 	var speed = res.speed; // 速度，以米/每秒计
 	var accuracy = res.accuracy; // 位置精度
+	$.ajax({
+                type: 'post',
+                url: 'http://154.8.210.161/weixin/Ajax/read',
+                data: { latitude: latitude, longitude: longitude },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.status == 0) {
+                        alert(data.msg);
+                    } else {
+                        $("#city").text(data.city);
+                        $("#update_time").text(data.update_time);
+                        $("#shidu").text(data.shidu);
+                        $("#wendu").text(data.wendu);
+                        $("#high1").text(data.high1);
+                        $("#low1").text(data.low1);
+                        $("#fx").text(data.fx);
+                        $("#type").text(data.type);
+                    }
+                },
+                error: function() {
+                    alert("程序异常");
+                }
+            });
 	}
 	});
   });
